@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @Transactional
 public class StartedController {
-
     @GetMapping("/")
     public String LoginPage(){
         return "login";
     }
-
 
 }

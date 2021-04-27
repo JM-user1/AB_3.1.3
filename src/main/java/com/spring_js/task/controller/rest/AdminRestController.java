@@ -1,74 +1,76 @@
 package com.spring_js.task.controller.rest;
 
+import com.spring_js.task.model.User;
 import com.spring_js.task.service.interfaces.RoleService;
 import com.spring_js.task.service.interfaces.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/*
+
 @RestController
-@RequestMapping("/admin/**")
+@RequestMapping("/admin")
 public class AdminRestController {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final DTOService dtoService;
 
-    @Autowired
-    public AdminRestController(UserService userService, RoleService roleService, DTOService dtoService) {
+
+    public AdminRestController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.dtoService = dtoService;
     }
 
-    @GetMapping("userList")
-    public ResponseEntity<List<DTOUser>> listOfUsers() {
-        List<DTOUser> dtoUsers = dtoService.userListConvertToDTO(userService.listUsers());
-        return dtoUsers != null && !dtoUsers.isEmpty()
-                ? new ResponseEntity<>(dtoUsers, HttpStatus.OK)
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> listOfUsers(){//work
+        List<User> allUsers = userService.listUsers();
+        return allUsers != null && !allUsers.isEmpty()
+                ? new ResponseEntity<>(allUsers, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);//new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable long id){//work
+        User user = userService.getUserById(id);
+        return user != null
+                ? new ResponseEntity<>(user, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("user/{id}")
-    public ResponseEntity<DTOUser> getUserById(@PathVariable(name = "id") Long id) {
-        DTOUser dtoUser = dtoService.userConvertToDTOUser(userService.getUserById(id));
-        return dtoUser != null
-                ? new ResponseEntity<>(dtoUser, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PostMapping("newUser")
-    public ResponseEntity<DTOUser> newUser(@RequestBody DTOUser dtoUser) {
+    @PostMapping(produces = "application/json",value = "/newUser")//work
+    public ResponseEntity<User> newUser(@RequestBody User user){
         try {
-            userService.addUser(dtoService.dtoUserConvertToUser(dtoUser));
-            return new ResponseEntity<>(dtoUser, HttpStatus.CREATED);
+            userService.addUser(user);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("updateUser")
-    public ResponseEntity<DTOUser> updateUser(@RequestBody DTOUser dtoUser) {
+
+    @PutMapping("/updateUser")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {//work
         try {
-            userService.updateUser(dtoService.dtoUserConvertToUser(dtoUser));
-            return new ResponseEntity<>(dtoUser, HttpStatus.OK);
+            userService.updateUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("deleteUser/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long id) {
+
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable long id) {//work
         try {
             userService.deleteUser(id);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("User with id " + id + " was deleted", HttpStatus.OK);
+
     }
 
-}*/
+
+}

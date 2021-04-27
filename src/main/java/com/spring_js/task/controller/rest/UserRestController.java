@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/*
+
 @RestController
-@RequestMapping("/user/**")
+@RequestMapping("/user/")
 public class UserRestController {
 
     private final UserService userService;
@@ -19,7 +19,7 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @GetMapping("authUser")
+    @GetMapping("userPage")
     public ResponseEntity<User> getAuthUser() {
         User user = userService.getAuthUser();
         return user != null
@@ -28,4 +28,4 @@ public class UserRestController {
     }
 }
 
-*/
+
