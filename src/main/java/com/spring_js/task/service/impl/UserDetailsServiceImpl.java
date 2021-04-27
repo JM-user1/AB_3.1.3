@@ -1,4 +1,4 @@
-package com.spring_js.task.service;
+package com.spring_js.task.service.impl;
 
 import com.spring_js.task.model.User;
 import com.spring_js.task.repository.UserRepo;

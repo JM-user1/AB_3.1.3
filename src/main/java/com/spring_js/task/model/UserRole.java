@@ -1,6 +1,7 @@
 package com.spring_js.task.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.Transient;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "role")
-@Transient
-@Component
+@JsonIgnoreProperties({"userSet"})
 public class UserRole implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +21,10 @@ public class UserRole implements GrantedAuthority {
     @Column(name = "role", unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "roleSet")
-    private Set<User> userSet = new HashSet<>();
+//    @ManyToMany(mappedBy = "roleSet")
+//    private Set<User> userSet;
 
+/*
     public Set<User> getUserSet() {
         return userSet;
     }
@@ -31,6 +32,7 @@ public class UserRole implements GrantedAuthority {
     public void setUserSet(Set<User> userSet) {
         this.userSet = userSet;
     }
+*/
 
     public UserRole() {
 

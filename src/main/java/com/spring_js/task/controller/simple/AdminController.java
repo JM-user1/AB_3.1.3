@@ -2,8 +2,8 @@ package com.spring_js.task.controller.simple;
 
 import com.spring_js.task.converter.Converter;
 import com.spring_js.task.model.User;
-import com.spring_js.task.service.RoleService;
-import com.spring_js.task.service.UserService;
+import com.spring_js.task.service.interfaces.RoleService;
+import com.spring_js.task.service.interfaces.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
