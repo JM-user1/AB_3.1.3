@@ -19,7 +19,7 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @GetMapping("userPage")
+    @GetMapping("authUser")
     public ResponseEntity<User> getAuthUser() {
         User user = userService.getAuthUser();
         return user != null

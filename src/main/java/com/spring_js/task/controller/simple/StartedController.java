@@ -13,4 +13,9 @@ public class StartedController {
         return "login";
     }
 
+    @GetMapping("/index")
+    public String index(){
+        return "index";
+    }
+
 }

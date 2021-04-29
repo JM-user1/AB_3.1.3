@@ -5,6 +5,7 @@ import com.spring_js.task.service.interfaces.RoleService;
 import com.spring_js.task.service.interfaces.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +18,15 @@ public class AdminRestController {
     private final UserService userService;
     private final RoleService roleService;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AdminRestController(UserService userService, RoleService roleService) {
+    public AdminRestController(UserService userService, RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/userList")
     public ResponseEntity<List<User>> listOfUsers(){//work
         List<User> allUsers = userService.listUsers();
         return allUsers != null && !allUsers.isEmpty()
@@ -39,9 +42,10 @@ public class AdminRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(produces = "application/json",value = "/newUser")//work
+    @PostMapping("/newUser")//work
     public ResponseEntity<User> newUser(@RequestBody User user){
         try {
+            /*user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));*/
             userService.addUser(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (Exception e) {
