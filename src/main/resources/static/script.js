@@ -1,6 +1,14 @@
 /*
 $(document).ready(refreshUsersTable());
 */
+let elem = document.querySelector( '#add_button');
+
+/* let btnEdit = document.querySelector(`#edit-btn`);*/
+
+let btnDelete = document.querySelector(`#modal-delete`)
+
+let usersList = document.querySelector( '#nav-list-tab');
+
 
 let userinfo;//для вывода инфы юзера
 let usersinfo;//для вывода в таблу юзеров
@@ -9,10 +17,8 @@ let user;
 
 
 
-function refreshUsersTable() {
-    alert('add user')
-}
 
+UsersTable()
 
 $.ajax({//для вывода инфы юзера
     url: '/user/authUser',
@@ -31,47 +37,40 @@ $.ajax({//для вывода инфы юзера
     }
 });
 
+usersList.addEventListener('click',()=> UsersTable());
 
-$.ajax({//для вывода в таблу юзеров
-    url: '/admin/userList',
-    method: 'get',
-    contentType: "application/json",
-    dataType: 'json',
-    success: function(users){
-        console.log(users)
-        $.each(users, function () {/*<td>${this.password}</td>*/
-            usersinfo += `<tr>
-                        <td>${this.id}</td>
-                        <td>${this.name}</td>
-                        
-                        <td>${this.email}</td>
-                        <td>${this.roleSet.map(role => role.name)}</td>
-                        <td><button class="btn btn-info" th:attr="data-target='#upd' + ${this.id}" id="modal-edit"> Edit </button></td>
-                        <td><button class="btn btn-danger" th:attr="data-target='#del' + ${this.id}" id="modal-delete"> DELETE </button></td>
-                         </tr>`
-        })
-        $("#users_table").html(usersinfo)
-
-        userinfo_v1 = `${user.email} with roles: ${user.roleSet.map(role => role.name)}`
-        $("#info").html(userinfo_v1)
-    }
-});
-
-
-/*создаем массив из значений полученных с селектора при создании нового пользователя*/
-function convertToRoleSet(Array) {
-    let roleArray = [];
-
-    if (Array.indexOf("USER") !== -1) {
-        roleArray.unshift({id: 2, name: "USER"});
-    }
-    if (Array.indexOf("ADMIN") !== -1) {
-        roleArray.unshift({id: 1, name: "ADMIN"});
-    }
-    return roleArray;
+function UsersTable(){
+    $.ajax({//для вывода в таблу юзеров
+        url: '/admin/userList',
+        method: 'get',
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(users){
+            console.log(users)
+            $.each(users, function () {/*<td>${this.password}</td>  data-id=${this.id} */
+                usersinfo += `<tr>
+                            <td>${this.id}</td>
+                            <td>${this.name}</td>
+                            
+                            <td>${this.email}</td>
+                            <td>${this.roleSet.map(role => role.name)}</td>
+                          <td>
+                            <button onclick="openEditUserModal(this.id)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateForm" data-id=${this.id}> UPDATE </button>
+                          </td>    
+       
+                          <td>
+                            <button onclick="deleteUser(this.id)" type="button" class="btn btn-danger" data-bs-toggle="modal" data-id=${this.id}> DELETE </button>
+                          </td>
+                </tr>`
+            })
+            $("#users_table").html(usersinfo)
+        }
+    });
 }
 
+
 /*создание нового пользователя*/
+elem.addEventListener('click',()=> createUser());
 function createUser() {
     let user = {
         "name": $('#firstNameCreate').val(),
@@ -95,9 +94,67 @@ function createUser() {
         },
         dataType: 'json',
         success: function () {
-            refreshUsersTable();
         }
     })
 }
+/*
+btnEdit.addEventListener('click',()=> openEditUserModal("${user.id}"));*/
+function openEditUserModal(Id) {
+    $.ajax({
+        url: "http://localhost:8080/admin/user/" + Id,
+        type: 'get',
+        headers: {
+            'x-auth-token': localStorage.accessToken,
+        },
+        success: (user) => {
+            console.log("it is all users table: " + user.name+" roles id: " + user.roles.map(role => role.name))
+            alert("Found user by Id" )
+            sendEditRequest(user);
+        },
+        error: alert("Not found")
+    })
+}
+
+function sendEditRequest(user) {
+    $('#idE').val(user.id)
+    $('#usernameE').val(user.username);
+    $('#emailE').val(user.email);
+    $('#passwordE').val(user.password);
 
 
+    $('#edit_button').click(() => {
+        let userE = {
+            "id" : user.id,
+            "username": $('#usernameE').val(),
+            "email": $('#emailE').val(),
+            "password": $('#passwordE').val(),
+            "roles": $('#rolesSelect').val()
+        };
+        console.log("this is edited user: ", JSON.stringify(userE))
+        $.ajax({
+            url: `http://localhost:8080/admin/updateUser`,
+            type: 'put',
+            data: JSON.stringify(userE),
+            headers: {
+                'x-auth-token': localStorage.accessToken,
+                "Content-Type": "application/json"
+            },
+            dataType: 'json',
+            success: UsersTable,
+            error: (data) => alert(data)
+        })
+    });
+
+}
+
+function deleteUser(userId) {
+    $.ajax({
+        url: `http://localhost:8080/admin/deleteUser/${userId}`,
+        type: 'delete',
+        headers: {
+            'x-auth-token': localStorage.accessToken
+        },
+        success: usersList,
+        error: (data) => alert(data)
+    })
+}
