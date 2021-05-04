@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,13 +27,13 @@ public class User implements UserDetails {
     private String email;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<UserRole> roleSet;
+    private Set<Role> roleSet;
 
 
     public User() {
     }
 
-    public User(String name, String password, String email, Set<UserRole> roleSet) {
+    public User(String name, String password, String email, Set<Role> roleSet) {
         this.name = name;
         this.password = password;
         this.email = email;
@@ -44,7 +43,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoleSet();
-//        return null;
     }
 
     @Override
@@ -77,17 +75,10 @@ public class User implements UserDetails {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPassword() {
         return password;
@@ -105,12 +96,9 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Set<UserRole> getRoleSet() {
+    public Set<Role> getRoleSet() {
         return roleSet;
     }
 
-    public void setRoleSet(Set<UserRole> roleSet) {
-        this.roleSet = roleSet;
-    }
 
 }

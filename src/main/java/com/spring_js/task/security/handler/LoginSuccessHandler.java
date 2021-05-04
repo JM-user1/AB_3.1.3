@@ -1,4 +1,4 @@
-package com.spring_js.task.handler;
+package com.spring_js.task.security.handler;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

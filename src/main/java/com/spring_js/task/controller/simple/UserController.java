@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/user/**")
+@RequestMapping("/user")
 public class UserController {
 
-    @GetMapping("userPage")
+    @GetMapping("/userPage")
     public String showUserForm(@AuthenticationPrincipal User user) {
         return "/user/userPage";
     }

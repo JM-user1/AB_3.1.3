@@ -64,15 +64,5 @@ public class UserServiceImp implements UserService {
         return userRepo.getOne(id);
     }
 
-    @Override
-    public User getAuthUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = new User();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            user = userRepo.findByName(userDetails.getUsername());
-        }
-        return user;
-    }
 
 }

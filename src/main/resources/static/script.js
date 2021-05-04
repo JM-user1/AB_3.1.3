@@ -101,7 +101,7 @@ function createUser() {
 btnEdit.addEventListener('click',()=> openEditUserModal("${user.id}"));*/
 function openEditUserModal(Id) {
     $.ajax({
-        url: "http://localhost:8080/admin/user/" + Id,
+        url: "http://localhost:8080/admin/user/" + {Id},
         type: 'get',
         headers: {
             'x-auth-token': localStorage.accessToken,

@@ -1,13 +1,9 @@
 package com.spring_js.task.repository;
 
-import com.spring_js.task.model.UserRole;
+import com.spring_js.task.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
-
 @Repository
-public interface RoleRepo extends JpaRepository<UserRole, Long> {
-    Set<UserRole> getRolesByNameIn(Set<String> roles);
-    UserRole getRoleByName(String defaultRoleName);
+public interface RoleRepo extends JpaRepository<Role, Long> {
 }
